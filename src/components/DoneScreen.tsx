@@ -116,11 +116,11 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
   }, [votedList, searchTerm]);
 
   return (
-    <div className="w-full max-w-[580px] bg-gradient-to-b from-[#1e2531] to-[#181d26] border border-[#333d4d] rounded-2xl p-6 sm:p-8 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.7)] transition-all space-y-6">
+    <div className="w-full max-w-[580px] bg-gradient-to-b from-[#1c222c] to-[#12161d] border border-[#333d4d] p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_0_1px_rgba(201,162,39,0.15)] transition-all space-y-6">
       {/* 1. STATUS HEADER */}
       <div className="text-center">
         <div
-          className={`w-14 h-14 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl border ${
+          className={`w-14 h-14 mx-auto mb-3 flex items-center justify-center text-2xl border shadow-lg ${
             alreadyVoted
               ? 'bg-[#c9a227]/15 border-[#c9a227] text-[#e0bc4a]'
               : 'bg-[#6f9c86]/15 border-[#6f9c86] text-[#6f9c86]'
@@ -141,7 +141,7 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
 
         {/* My submitted score summary */}
         {myVote && (
-          <div className="mt-3 p-3 bg-[#12161d] border border-[#333d4d] rounded-xl inline-flex flex-wrap items-center justify-center gap-2 text-xs font-mono">
+          <div className="mt-3 p-3 bg-[#12161d] border border-[#333d4d] inline-flex flex-wrap items-center justify-center gap-2 text-xs font-mono shadow-inner">
             <span className="text-[#b9bdc7]">Điểm bạn đã chấm:</span>
             {exhibits.map((ex) => {
               const score = myVote.scores[ex.id];
@@ -149,7 +149,7 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
                 return (
                   <span
                     key={ex.id}
-                    className="px-2 py-0.5 rounded bg-[#181d26] text-[#b9bdc7]/50 border border-[#333d4d]/40"
+                    className="px-2 py-0.5 bg-[#181d26] text-[#b9bdc7]/50 border border-[#333d4d]/40"
                   >
                     Tổ {ex.groupNumber}: Tổ của bạn
                   </span>
@@ -158,7 +158,7 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
               return (
                 <span
                   key={ex.id}
-                  className="px-2 py-0.5 rounded bg-[#c9a227]/15 text-[#e0bc4a] border border-[#c9a227]/40 font-semibold"
+                  className="px-2 py-0.5 bg-[#c9a227]/15 text-[#e0bc4a] border border-[#c9a227]/40 font-semibold"
                 >
                   Tổ {ex.groupNumber}: {score !== null ? `${score}đ` : '—'}
                 </span>
@@ -169,7 +169,7 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
       </div>
 
       {/* 2. BẢNG TỔNG ĐIỂM HIỆN TẠI (LIVE LEADERBOARD) */}
-      <div className="bg-[#12161d] border border-[#333d4d] rounded-xl p-4 sm:p-5 shadow-inner">
+      <div className="bg-[#12161d] border border-[#333d4d] p-4 sm:p-5 shadow-[0_10px_25px_rgba(0,0,0,0.5)]">
         <div className="flex items-center justify-between gap-2 mb-3.5 pb-2.5 border-b border-[#333d4d]/60">
           <div className="flex items-center gap-2">
             <Trophy className="w-4 h-4 text-[#e0bc4a]" />
@@ -183,12 +183,12 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
               onClick={handleManualRefresh}
               disabled={isManualSyncing}
               title="Làm mới bảng điểm từ Google Sheets"
-              className="p-1 px-2 rounded-lg text-[11px] font-mono bg-[#181d26] hover:bg-[#262f3d] text-[#b9bdc7] hover:text-[#e0bc4a] border border-[#333d4d] flex items-center gap-1 transition-colors disabled:opacity-50"
+              className="p-1 px-2 text-[11px] font-mono bg-[#181d26] hover:bg-[#262f3d] text-[#b9bdc7] hover:text-[#e0bc4a] border border-[#333d4d] flex items-center gap-1 transition-colors disabled:opacity-50"
             >
               <RefreshCw className={`w-3 h-3 ${isManualSyncing ? 'animate-spin text-[#e0bc4a]' : ''}`} />
               <span className="hidden sm:inline">Làm mới</span>
             </button>
-            <span className="text-[11px] font-mono text-[#c9a227] bg-[#c9a227]/10 px-2 py-0.5 rounded-full border border-[#c9a227]/30">
+            <span className="text-[11px] font-mono text-[#c9a227] bg-[#c9a227]/10 px-2 py-0.5 border border-[#c9a227]/30">
               {votedCount} lượt đã chấm
             </span>
           </div>
@@ -209,23 +209,23 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
             return (
               <div
                 key={item.exhibit.id}
-                className={`p-3 rounded-xl border flex items-center justify-between gap-3 transition-all ${
+                className={`p-3 border flex items-center justify-between gap-3 transition-all ${
                   isUserGroupArtwork
-                    ? 'bg-[#181d26] border-[#c9a227]/50 shadow-[0_2px_12px_rgba(201,162,39,0.12)]'
+                    ? 'bg-[#181d26] border-[#c9a227]/50 shadow-[0_4px_16px_rgba(201,162,39,0.15)]'
                     : 'bg-[#181d26]/80 border-[#333d4d]'
                 }`}
               >
                 {/* Left: Rank & Artwork info */}
                 <div className="flex items-center gap-3 min-w-0">
                   <div
-                    className={`w-7 h-7 rounded-lg border flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
+                    className={`w-7 h-7 border flex items-center justify-center font-mono text-xs font-bold shrink-0 ${
                       rankColors[rank] || rankColors[3]
                     }`}
                   >
                     #{rank + 1}
                   </div>
 
-                  <div className="w-10 h-10 rounded-lg overflow-hidden border border-[#333d4d] shrink-0 bg-[#0c0f14]">
+                  <div className="w-10 h-10 overflow-hidden border border-[#333d4d] shrink-0 bg-[#0c0f14]">
                     <img
                       src={imgUrl}
                       alt={`Tác phẩm Tổ ${item.exhibit.groupNumber}`}
@@ -239,7 +239,7 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
                         Tác phẩm Tổ {item.exhibit.groupNumber}
                       </span>
                       {isUserGroupArtwork && (
-                        <span className="text-[10px] bg-[#c9a227]/20 text-[#e0bc4a] border border-[#c9a227]/40 px-1.5 py-0.2 rounded font-mono">
+                        <span className="text-[10px] bg-[#c9a227]/20 text-[#e0bc4a] border border-[#c9a227]/40 px-1.5 py-0.2 font-mono">
                           Tổ của bạn
                         </span>
                       )}
@@ -269,7 +269,7 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
       </div>
 
       {/* 3. TIẾN ĐỘ THAM GIA */}
-      <div className="bg-[#12161d] border border-[#333d4d] rounded-xl p-4">
+      <div className="bg-[#12161d] border border-[#333d4d] p-4 shadow-inner">
         <div className="flex items-center justify-between text-xs font-mono mb-2">
           <span className="text-[#b9bdc7] flex items-center gap-1.5">
             <Users className="w-3.5 h-3.5 text-[#c9a227]" />
@@ -279,9 +279,9 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
             {votedCount} / {totalMembers} ({percentage}%)
           </span>
         </div>
-        <div className="w-full bg-[#1e2531] h-2 rounded-full overflow-hidden">
+        <div className="w-full bg-[#1e2531] h-2 overflow-hidden border border-[#333d4d]/40">
           <div
-            className="bg-gradient-to-r from-[#c9a227] to-[#6f9c86] h-full rounded-full transition-all duration-700"
+            className="bg-gradient-to-r from-[#c9a227] to-[#6f9c86] h-full transition-all duration-700"
             style={{ width: `${percentage}%` }}
           />
         </div>
@@ -300,7 +300,7 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Lọc tên…"
-                className="w-full pl-6 pr-2 py-1 text-xs bg-[#12161d] border border-[#333d4d] rounded-lg text-[#f1ede3] placeholder-[#6a7382] focus:outline-none focus:border-[#c9a227]"
+                className="w-full pl-6 pr-2 py-1 text-xs bg-[#12161d] border border-[#333d4d] text-[#f1ede3] placeholder-[#6a7382] focus:outline-none focus:border-[#c9a227]"
               />
               <Search className="w-3 h-3 text-[#b9bdc7] absolute left-2 top-2" />
             </div>
@@ -315,10 +315,10 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
                 return (
                   <li
                     key={v.raw}
-                    className={`text-[13px] py-1 px-2.5 rounded-lg flex items-center justify-between gap-2 truncate transition-colors ${
+                    className={`text-[13px] py-1.5 px-2.5 flex items-center justify-between gap-2 truncate transition-colors border ${
                       isCurrent
-                        ? 'bg-[#c9a227]/15 text-[#e0bc4a] font-medium border border-[#c9a227]/30'
-                        : 'text-[#b9bdc7] hover:text-[#f1ede3] bg-[#12161d]/50'
+                        ? 'bg-[#c9a227]/15 text-[#e0bc4a] font-medium border-[#c9a227]/40 shadow-sm'
+                        : 'text-[#b9bdc7] hover:text-[#f1ede3] bg-[#12161d]/50 border-transparent hover:border-[#333d4d]'
                     }`}
                   >
                     <div className="flex items-center gap-1.5 truncate">
@@ -347,7 +347,7 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
         <button
           type="button"
           onClick={onResetUser}
-          className="flex-1 py-2.5 px-4 rounded-xl border border-[#333d4d] hover:border-[#c9a227] text-xs text-[#b9bdc7] hover:text-[#f1ede3] bg-[#181d26] transition-colors flex items-center justify-center gap-1.5 font-medium"
+          className="flex-1 py-2.5 px-4 border border-[#333d4d] hover:border-[#c9a227] text-xs text-[#b9bdc7] hover:text-[#f1ede3] bg-[#181d26] transition-colors flex items-center justify-center gap-1.5 font-medium shadow-sm hover:shadow-md cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5" />
           Đăng xuất / Đổi thành viên

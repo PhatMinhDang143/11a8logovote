@@ -83,16 +83,16 @@ export const VotingScreen: React.FC<VotingScreenProps> = ({
   const displayImageUrl = formatImageUrl(currentExhibit.url);
 
   return (
-    <div className="w-full max-w-[560px] bg-gradient-to-b from-[#1e2531] to-[#181d26] border border-[#333d4d] rounded-2xl p-6 sm:p-8 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.7)] transition-all">
+    <div className="w-full max-w-[560px] bg-gradient-to-b from-[#1c222c] to-[#12161d] border border-[#333d4d] p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_0_1px_rgba(201,162,39,0.15)] transition-all">
       {/* Top Banner: User Group Context */}
-      <div className="mb-5 bg-[#12161d] border border-[#333d4d] rounded-xl px-3.5 py-2.5 flex items-center justify-between text-xs">
+      <div className="mb-5 bg-[#12161d] border border-[#333d4d] px-3.5 py-2.5 flex items-center justify-between text-xs shadow-inner">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#e0bc4a] animate-pulse"></span>
+          <span className="w-2 h-2 bg-[#e0bc4a] animate-pulse"></span>
           <span className="text-[#b9bdc7]">
             Thành viên: <strong className="text-[#f1ede3] font-medium">{toTitleCase(currentUser)}</strong>
           </span>
         </div>
-        <span className="font-mono text-[#e0bc4a] bg-[#c9a227]/15 border border-[#c9a227]/40 px-2.5 py-0.5 rounded-full font-semibold">
+        <span className="font-mono text-[#e0bc4a] bg-[#c9a227]/15 border border-[#c9a227]/40 px-2.5 py-0.5 font-semibold">
           Tổ {userGroup}
         </span>
       </div>
@@ -109,7 +109,7 @@ export const VotingScreen: React.FC<VotingScreenProps> = ({
             return (
               <div
                 key={ex.id}
-                className="h-[34px] px-3 rounded-full flex items-center justify-center font-mono text-xs border border-[#333d4d]/40 text-[#b9bdc7]/40 bg-[#12161d]"
+                className="h-[34px] px-3 flex items-center justify-center font-mono text-xs border border-[#333d4d]/40 text-[#b9bdc7]/40 bg-[#12161d]"
               >
                 Tổ {ex.groupNumber}
               </div>
@@ -130,9 +130,9 @@ export const VotingScreen: React.FC<VotingScreenProps> = ({
                   for (let i = 0; i < Math.abs(diff); i++) onPrev();
                 }
               }}
-              className={`h-[34px] px-3 rounded-full flex items-center justify-center font-mono text-xs border transition-all cursor-pointer ${
+              className={`h-[34px] px-3 flex items-center justify-center font-mono text-xs border transition-all cursor-pointer ${
                 isCurrentActive
-                  ? 'border-[#c9a227] text-[#e0bc4a] bg-[#c9a227]/15 ring-2 ring-[#c9a227]/30 scale-105 font-semibold'
+                  ? 'border-[#c9a227] text-[#e0bc4a] bg-[#c9a227]/15 ring-2 ring-[#c9a227]/30 font-semibold shadow-md'
                   : hasScore
                   ? 'border-[#6f9c86] text-[#6f9c86] bg-[#6f9c86]/10 font-medium'
                   : 'border-[#333d4d] text-[#b9bdc7] bg-[#181d26] hover:border-[#c9a227]'
@@ -162,7 +162,7 @@ export const VotingScreen: React.FC<VotingScreenProps> = ({
       </h2>
 
       {/* Frame & Image */}
-      <div className="relative rounded-xl overflow-hidden border border-[#333d4d] bg-[#0c0f14] aspect-[4/3] shadow-[inset_0_0_0_6px_#0c0f14,inset_0_0_0_7px_#3a2f14] group">
+      <div className="relative overflow-hidden border border-[#333d4d] bg-[#0c0f14] aspect-[4/3] shadow-[0_10px_25px_rgba(0,0,0,0.8),inset_0_0_0_1px_rgba(201,162,39,0.2)] group">
         <img
           src={displayImageUrl}
           alt={`Tác phẩm Tổ ${currentExhibit.groupNumber}`}
@@ -173,7 +173,7 @@ export const VotingScreen: React.FC<VotingScreenProps> = ({
         <button
           type="button"
           onClick={() => onOpenLightbox(currentExhibit)}
-          className="absolute bottom-3 right-3 bg-[#12161d]/85 hover:bg-[#1e2531] border border-[#333d4d] text-[#f1ede3] p-2 rounded-lg text-xs flex items-center gap-1.5 backdrop-blur-sm opacity-90 hover:opacity-100 transition-all shadow-md"
+          className="absolute bottom-3 right-3 bg-[#12161d]/90 hover:bg-[#1e2531] border border-[#333d4d] text-[#f1ede3] p-2 text-xs flex items-center gap-1.5 backdrop-blur-sm opacity-90 hover:opacity-100 transition-all shadow-lg"
           title="Xem ảnh cỡ lớn"
         >
           <Maximize2 className="w-3.5 h-3.5 text-[#e0bc4a]" />
@@ -194,9 +194,9 @@ export const VotingScreen: React.FC<VotingScreenProps> = ({
               key={n}
               type="button"
               onClick={() => onSelectScore(currentExhibit.id, n)}
-              className={`aspect-square rounded-xl border font-mono text-lg font-medium flex items-center justify-center transition-all ${
+              className={`aspect-square border font-mono text-lg font-medium flex items-center justify-center transition-all ${
                 isSelected
-                  ? 'bg-gradient-to-b from-[#e0bc4a] to-[#c9a227] text-[#1a1206] border-[#e0bc4a] shadow-[0_6px_18px_-4px_rgba(201,162,39,0.7)] -translate-y-0.5 scale-105 font-bold'
+                  ? 'bg-gradient-to-b from-[#e0bc4a] to-[#c9a227] text-[#1a1206] border-[#e0bc4a] shadow-[0_6px_18px_-4px_rgba(201,162,39,0.7)] -translate-y-0.5 font-bold'
                   : 'bg-[#181d26] text-[#f1ede3] border-[#333d4d] hover:border-[#c9a227] hover:bg-[#262f3d]'
               }`}
             >
@@ -213,7 +213,7 @@ export const VotingScreen: React.FC<VotingScreenProps> = ({
             type="button"
             onClick={onPrev}
             disabled={isSubmitting}
-            className="flex-1 py-3 px-4 rounded-xl border border-[#333d4d] bg-transparent text-[#b9bdc7] hover:border-[#c9a227] hover:text-[#f1ede3] font-semibold text-sm transition-all flex items-center justify-center gap-1"
+            className="flex-1 py-3 px-4 border border-[#333d4d] bg-transparent text-[#b9bdc7] hover:border-[#c9a227] hover:text-[#f1ede3] font-semibold text-sm transition-all flex items-center justify-center gap-1"
           >
             <ChevronLeft className="w-4 h-4" /> Quay lại
           </button>
@@ -223,10 +223,10 @@ export const VotingScreen: React.FC<VotingScreenProps> = ({
           type="button"
           onClick={isLast ? onSubmit : onNext}
           disabled={currentScore === null || isSubmitting}
-          className={`flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-3 px-4 font-semibold text-sm transition-all flex items-center justify-center gap-1.5 border ${
             currentScore !== null && !isSubmitting
-              ? 'bg-gradient-to-b from-[#e0bc4a] to-[#c9a227] text-[#1a1206] shadow-[0_4px_16px_rgba(201,162,39,0.4)] hover:shadow-[0_6px_22px_rgba(201,162,39,0.6)] active:scale-[0.99]'
-              : 'bg-[#262f3d]/60 text-[#b9bdc7]/40 border border-[#333d4d]/40 cursor-not-allowed'
+              ? 'bg-gradient-to-b from-[#e0bc4a] to-[#c9a227] text-[#1a1206] border-[#e0bc4a] shadow-[0_6px_20px_rgba(201,162,39,0.4)] hover:shadow-[0_8px_25px_rgba(201,162,39,0.6)] active:scale-[0.99] cursor-pointer'
+              : 'bg-[#262f3d]/60 text-[#b9bdc7]/40 border-[#333d4d]/40 cursor-not-allowed'
           }`}
         >
           {isSubmitting ? (

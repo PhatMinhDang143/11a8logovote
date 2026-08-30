@@ -286,28 +286,23 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       onClick={onClose}
     >
       <div
-        className="relative bg-[#181d26] border border-[#333d4d] rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden"
+        className="relative bg-[#181d26] border border-[#333d4d] w-full max-w-3xl max-h-[90vh] flex flex-col shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95),0_0_0_1px_rgba(201,162,39,0.15)] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#333d4d] bg-[#1e2531]">
+        <div className="flex items-center justify-between px-6 py-3.5 border-b border-[#333d4d] bg-[#1a202c]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#c9a227]/20 border border-[#c9a227]/50 flex items-center justify-center text-[#e0bc4a]">
-              <Lock className="w-4 h-4" />
+            <div className="w-7 h-7 bg-[#c9a227]/20 border border-[#c9a227]/50 flex items-center justify-center text-[#e0bc4a]">
+              <Lock className="w-3.5 h-3.5" />
             </div>
-            <div>
-              <h3 className="font-serif italic text-lg text-[#f1ede3] font-semibold m-0">
-                Bảng điều khiển Ban tổ chức
-              </h3>
-              <p className="text-[11px] text-[#b9bdc7] font-mono">
-                Quản lý tác phẩm • Xem mật khẩu học sinh • Đồng bộ Google Sheets
-              </p>
-            </div>
+            <h3 className="font-serif italic text-base text-[#f1ede3] font-semibold m-0">
+              Quản trị viên
+            </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#b9bdc7] hover:text-[#f1ede3] hover:bg-[#262f3d] transition-colors"
+            className="p-1 text-[#b9bdc7] hover:text-[#f1ede3] hover:bg-[#262f3d] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -315,16 +310,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
         {/* Content Body */}
         {!isAuthenticated ? (
-          <div className="p-8 flex flex-col items-center justify-center text-center">
-            <div className="w-12 h-12 rounded-full bg-[#262f3d] border border-[#333d4d] flex items-center justify-center text-[#e0bc4a] mb-4 shadow-inner">
-              <Lock className="w-5 h-5" />
-            </div>
-            <h4 className="font-serif italic text-xl text-[#f1ede3] mb-1">
-              Xác thực Ban giám khảo / Quản trị viên
+          <div className="p-8 sm:p-10 flex flex-col items-center justify-center text-center">
+            <h4 className="font-serif italic text-lg text-[#f1ede3] mb-4">
+              Nhập mật khẩu quản trị
             </h4>
-            <p className="text-xs text-[#b9bdc7] max-w-xs mb-6">
-              Vui lòng nhập mật khẩu quản trị để mở bảng điều khiển.
-            </p>
 
             <form onSubmit={handleLogin} className="w-full max-w-xs space-y-3">
               <div className="relative">
@@ -332,14 +321,14 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                   type={showPassword ? 'text' : 'password'}
                   value={passwordInput}
                   onChange={(e) => setPasswordInput(e.target.value)}
-                  placeholder="Nhập mật khẩu..."
-                  className="w-full px-4 py-2.5 text-sm bg-[#12161d] border border-[#333d4d] rounded-xl text-[#f1ede3] placeholder-[#6a7382] focus:outline-none focus:border-[#e0bc4a]"
+                  placeholder="Mật khẩu…"
+                  className="w-full px-4 py-2.5 text-sm bg-[#12161d] border border-[#333d4d] text-[#f1ede3] placeholder-[#6a7382] focus:outline-none focus:border-[#e0bc4a] shadow-inner"
                   autoFocus
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-2.5 text-[#b9bdc7] hover:text-[#f1ede3]"
+                  className="absolute right-3 top-2.5 text-[#8c94a4] hover:text-[#f1ede3]"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -353,9 +342,9 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-b from-[#e0bc4a] to-[#c9a227] text-[#1a1206] shadow-md hover:brightness-105 transition-all"
+                className="w-full py-2.5 text-sm font-semibold bg-gradient-to-b from-[#e0bc4a] to-[#c9a227] text-[#1a1206] shadow-md hover:shadow-lg transition-all border border-[#e0bc4a] cursor-pointer"
               >
-                Mở khóa quản trị
+                Đăng nhập
               </button>
             </form>
           </div>
@@ -366,29 +355,29 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveTab('scores')}
-                className={`py-3 px-3.5 text-xs font-mono uppercase tracking-wider border-b-2 flex items-center gap-1.5 whitespace-nowrap transition-colors ${
+                className={`py-3 px-3.5 text-xs font-mono uppercase tracking-wider border-b-2 flex items-center gap-1.5 whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === 'scores'
                     ? 'border-[#c9a227] text-[#e0bc4a] font-semibold'
                     : 'border-transparent text-[#b9bdc7] hover:text-[#f1ede3]'
                 }`}
               >
-                <BarChart3 className="w-3.5 h-3.5" /> Bảng Tổng Điểm ({allVotes.length})
+                <BarChart3 className="w-3.5 h-3.5" /> Tổng điểm ({allVotes.length})
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab('members')}
-                className={`py-3 px-3.5 text-xs font-mono uppercase tracking-wider border-b-2 flex items-center gap-1.5 whitespace-nowrap transition-colors ${
+                className={`py-3 px-3.5 text-xs font-mono uppercase tracking-wider border-b-2 flex items-center gap-1.5 whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === 'members'
                     ? 'border-[#c9a227] text-[#e0bc4a] font-semibold'
                     : 'border-transparent text-[#b9bdc7] hover:text-[#f1ede3]'
                 }`}
               >
-                <Users className="w-3.5 h-3.5" /> Học sinh &amp; Mật khẩu PIN
+                <Users className="w-3.5 h-3.5" /> Mật khẩu học sinh
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab('sheets')}
-                className={`py-3 px-3.5 text-xs font-mono uppercase tracking-wider border-b-2 flex items-center gap-1.5 whitespace-nowrap transition-colors ${
+                className={`py-3 px-3.5 text-xs font-mono uppercase tracking-wider border-b-2 flex items-center gap-1.5 whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === 'sheets'
                     ? 'border-[#c9a227] text-[#e0bc4a] font-semibold'
                     : 'border-transparent text-[#b9bdc7] hover:text-[#f1ede3]'
@@ -402,24 +391,24 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               <button
                 type="button"
                 onClick={() => setActiveTab('exhibits')}
-                className={`py-3 px-3.5 text-xs font-mono uppercase tracking-wider border-b-2 flex items-center gap-1.5 whitespace-nowrap transition-colors ${
+                className={`py-3 px-3.5 text-xs font-mono uppercase tracking-wider border-b-2 flex items-center gap-1.5 whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === 'exhibits'
                     ? 'border-[#c9a227] text-[#e0bc4a] font-semibold'
                     : 'border-transparent text-[#b9bdc7] hover:text-[#f1ede3]'
                 }`}
               >
-                <ImageIcon className="w-3.5 h-3.5" /> Ảnh tác phẩm 4 Tổ
+                <ImageIcon className="w-3.5 h-3.5" /> Ảnh tác phẩm
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab('data')}
-                className={`py-3 px-3.5 text-xs font-mono uppercase tracking-wider border-b-2 flex items-center gap-1.5 whitespace-nowrap transition-colors ${
+                className={`py-3 px-3.5 text-xs font-mono uppercase tracking-wider border-b-2 flex items-center gap-1.5 whitespace-nowrap transition-colors cursor-pointer ${
                   activeTab === 'data'
                     ? 'border-[#c9a227] text-[#e0bc4a] font-semibold'
                     : 'border-transparent text-[#b9bdc7] hover:text-[#f1ede3]'
                 }`}
               >
-                <FileSpreadsheet className="w-3.5 h-3.5" /> Dữ liệu &amp; Xuất CSV
+                <FileSpreadsheet className="w-3.5 h-3.5" /> Xuất CSV
               </button>
             </div>
 
@@ -428,6 +417,25 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               {/* TAB 1: RANKINGS & SCORES */}
               {activeTab === 'scores' && (
                 <div className="space-y-4">
+                  {/* Action row */}
+                  <div className="flex items-center justify-between gap-2 bg-[#12161d] p-3 rounded-xl border border-[#333d4d]">
+                    <span className="text-xs text-[#b9bdc7] font-mono">
+                      Tổng số phiếu hiện tại: <strong className="text-[#e0bc4a]">{allVotes.length}</strong> / 45
+                    </span>
+                    {allVotes.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (window.confirm('Bạn có chắc muốn xóa tất cả điểm số đã chấm (đưa về 0 để chấm lại từ đầu)?')) {
+                            storageService.clearAllVotes();
+                          }
+                        }}
+                        className="py-1 px-2.5 rounded-lg text-xs font-mono bg-[#e2725b]/15 hover:bg-[#e2725b]/25 text-[#e2725b] border border-[#e2725b]/40 flex items-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" /> Xóa tất cả điểm về 0
+                      </button>
+                    )}
+                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {rankedStats.map((item, rank) => {
                       const rankBadges = [

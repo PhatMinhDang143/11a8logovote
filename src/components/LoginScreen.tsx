@@ -123,105 +123,115 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSelectMember }) => {
   };
 
   return (
-    <div className="w-full max-w-[560px] bg-gradient-to-b from-[#1e2531] to-[#181d26] border border-[#333d4d] rounded-2xl p-6 sm:p-8 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.7)] transition-all">
+    <div className="w-full max-w-[560px] bg-gradient-to-b from-[#1c222c] to-[#12161d] border border-[#333d4d] p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_0_1px_rgba(201,162,39,0.15)] transition-all">
       {/* 1. Member selection */}
-      <label className="text-[12px] uppercase tracking-[0.14em] text-[#b9bdc7] mb-2 block font-mono font-medium">
-        1. Bạn là thành viên nào?
-      </label>
+      <div className="mb-4">
+        <label className="flex items-center gap-1.5 text-xs font-semibold text-[#f1ede3] uppercase tracking-wider mb-2">
+          <span className="w-5 h-5 bg-[#262f3d] text-[#e0bc4a] text-[11px] font-bold inline-flex items-center justify-center border border-[#3e4a5d]">
+            1
+          </span>
+          <span>Họ và tên</span>
+        </label>
 
-      <div className="relative mb-4" ref={dropdownRef}>
-        <div className="relative flex items-center">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setSelectedMember(null);
-              setIsDropdownOpen(true);
-              setErrorMessage('');
-            }}
-            onFocus={() => {
-              if (searchTerm.trim().length > 0) {
+        <div className="relative" ref={dropdownRef}>
+          <div className="relative flex items-center">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setSelectedMember(null);
                 setIsDropdownOpen(true);
-              }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') {
-                setIsDropdownOpen(false);
-              } else if (e.key === 'Enter') {
-                e.preventDefault();
-                if (filteredMembers.length === 1 && !selectedMember) {
-                  handleSelectMember(filteredMembers[0]);
-                } else {
-                  handleEnter();
+                setErrorMessage('');
+              }}
+              onFocus={() => {
+                if (searchTerm.trim().length > 0) {
+                  setIsDropdownOpen(true);
                 }
-              }
-            }}
-            placeholder="Gõ tên của bạn để tìm nhanh…"
-            className="w-full pl-11 pr-10 py-3.5 text-base bg-[#12161d] border border-[#333d4d] rounded-xl text-[#f1ede3] placeholder-[#6a7382] focus:outline-none focus:border-[#e0bc4a] focus:ring-1 focus:ring-[#e0bc4a] transition-all font-sans"
-            autoComplete="off"
-          />
-          <Search className="w-5 h-5 text-[#b9bdc7] absolute left-3.5 pointer-events-none" />
-          {searchTerm && (
-            <button
-              type="button"
-              onClick={handleClearSearch}
-              className="absolute right-3 p-1 rounded-md text-[#b9bdc7] hover:text-[#f1ede3] hover:bg-[#262f3d] transition-colors"
-              title="Xóa tìm kiếm"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-
-        {/* Autocomplete Dropdown */}
-        {isDropdownOpen && searchTerm.trim().length > 0 && (
-          <div className="absolute z-20 top-full left-0 right-0 mt-1.5 max-h-56 overflow-y-auto bg-[#181d26] border border-[#333d4d] rounded-xl shadow-2xl divide-y divide-[#262f3d]/60">
-            {filteredMembers.length > 0 ? (
-              filteredMembers.map((name) => {
-                const voted = storageService.getUserVote(name);
-                const isSelected = selectedMember === name;
-                return (
-                  <button
-                    key={name}
-                    type="button"
-                    onClick={() => handleSelectMember(name)}
-                    className={`w-full text-left px-4 py-2.5 flex items-center justify-between text-sm transition-colors hover:bg-[#262f3d] ${
-                      isSelected ? 'bg-[#262f3d] text-[#e0bc4a] font-medium' : 'text-[#f1ede3]'
-                    }`}
-                  >
-                    <span className="truncate">{toTitleCase(name)}</span>
-                    {voted ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-[#6f9c86] bg-[#6f9c86]/10 px-2 py-0.5 rounded-full border border-[#6f9c86]/30 font-mono">
-                        <CheckCircle2 className="w-3 h-3" /> Đã chấm (Tổ {voted.groupNumber})
-                      </span>
-                    ) : (
-                      <span className="text-[11px] text-[#b9bdc7] font-mono opacity-60">
-                        Chưa chấm
-                      </span>
-                    )}
-                  </button>
-                );
-              })
-            ) : (
-              <div className="px-4 py-3 text-sm text-[#b9bdc7] italic text-center">
-                Không tìm thấy tên &quot;{searchTerm}&quot; trong danh sách
-              </div>
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  setIsDropdownOpen(false);
+                } else if (e.key === 'Enter') {
+                  e.preventDefault();
+                  if (filteredMembers.length === 1 && !selectedMember) {
+                    handleSelectMember(filteredMembers[0]);
+                  } else {
+                    handleEnter();
+                  }
+                }
+              }}
+              placeholder="Gõ tên để tìm nhanh…"
+              className="w-full pl-11 pr-10 py-3 text-sm bg-[#12161d] border border-[#333d4d] text-[#f1ede3] placeholder-[#6a7382] focus:outline-none focus:border-[#e0bc4a] focus:ring-1 focus:ring-[#e0bc4a] transition-all font-sans shadow-inner"
+              autoComplete="off"
+            />
+            <Search className="w-4.5 h-4.5 text-[#8c94a4] absolute left-3.5 pointer-events-none" />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="absolute right-3 p-1 text-[#8c94a4] hover:text-[#f1ede3] hover:bg-[#262f3d] transition-colors"
+                title="Xóa tìm kiếm"
+              >
+                <X className="w-4 h-4" />
+              </button>
             )}
           </div>
-        )}
+
+          {/* Autocomplete Dropdown */}
+          {isDropdownOpen && searchTerm.trim().length > 0 && (
+            <div className="absolute z-20 top-full left-0 right-0 mt-1 max-h-56 overflow-y-auto bg-[#181d26] border border-[#333d4d] shadow-[0_15px_30px_rgba(0,0,0,0.8)] divide-y divide-[#262f3d]/60">
+              {filteredMembers.length > 0 ? (
+                filteredMembers.map((name) => {
+                  const voted = storageService.getUserVote(name);
+                  const isSelected = selectedMember === name;
+                  return (
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => handleSelectMember(name)}
+                      className={`w-full text-left px-4 py-2.5 flex items-center justify-between text-sm transition-colors hover:bg-[#262f3d] ${
+                        isSelected ? 'bg-[#262f3d] text-[#e0bc4a] font-medium' : 'text-[#f1ede3]'
+                      }`}
+                    >
+                      <span className="truncate">{toTitleCase(name)}</span>
+                      {voted ? (
+                        <span className="inline-flex items-center gap-1 text-[11px] text-[#6f9c86] bg-[#6f9c86]/10 px-2 py-0.5 border border-[#6f9c86]/30 font-mono">
+                          <CheckCircle2 className="w-3 h-3" /> Đã chấm (Tổ {voted.groupNumber})
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-[#8c94a4] font-mono opacity-60">
+                          Chưa chấm
+                        </span>
+                      )}
+                    </button>
+                  );
+                })
+              ) : (
+                <div className="px-4 py-3 text-sm text-[#8c94a4] italic text-center">
+                  Không tìm thấy &quot;{searchTerm}&quot;
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 2. Birthday PIN Security input */}
       <div className="mb-4">
-        <label className="text-[12px] uppercase tracking-[0.14em] text-[#b9bdc7] mb-2 flex items-center justify-between font-mono font-medium">
-          <span className="flex items-center gap-1.5">
-            <KeyRound className="w-3.5 h-3.5 text-[#e0bc4a]" /> 2. Mật khẩu (Ngày &amp; Tháng sinh - 4 số)
+        <div className="flex flex-wrap items-center justify-between gap-1 mb-2">
+          <label className="flex items-center gap-1.5 text-xs font-semibold text-[#f1ede3] uppercase tracking-wider">
+            <span className="w-5 h-5 bg-[#262f3d] text-[#e0bc4a] text-[11px] font-bold inline-flex items-center justify-center border border-[#3e4a5d]">
+              2
+            </span>
+            <span className="flex items-center gap-1">
+              <KeyRound className="w-3.5 h-3.5 text-[#e0bc4a]" /> Mật khẩu
+            </span>
+          </label>
+          <span className="text-[11px] text-[#e0bc4a]/90 bg-[#e0bc4a]/10 px-2 py-0.5 border border-[#e0bc4a]/20 font-medium">
+            Ngày/tháng sinh (VD: 0504)
           </span>
-          <span className="text-[11px] text-[#c9a227] normal-case font-normal">
-            VD: Sinh ngày 05/04 nhập 0504
-          </span>
-        </label>
+        </div>
 
         <div className="relative flex items-center">
           <input
@@ -239,13 +249,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSelectMember }) => {
                 handleEnter();
               }
             }}
-            placeholder="Nhập 4 số ngày/tháng sinh (VD: 0504)..."
-            className="w-full pl-4 pr-12 py-3 text-sm font-mono tracking-widest bg-[#12161d] border border-[#333d4d] rounded-xl text-[#f1ede3] placeholder-[#6a7382] focus:outline-none focus:border-[#e0bc4a] focus:ring-1 focus:ring-[#e0bc4a] transition-all"
+            placeholder="4 số ngày/tháng sinh…"
+            className="w-full pl-4 pr-12 py-3 text-sm font-mono tracking-widest bg-[#12161d] border border-[#333d4d] text-[#f1ede3] placeholder-[#6a7382] focus:outline-none focus:border-[#e0bc4a] focus:ring-1 focus:ring-[#e0bc4a] transition-all shadow-inner"
           />
           <button
             type="button"
             onClick={() => setShowPin(!showPin)}
-            className="absolute right-3 p-1.5 text-[#b9bdc7] hover:text-[#f1ede3] transition-colors"
+            className="absolute right-3 p-1.5 text-[#8c94a4] hover:text-[#f1ede3] transition-colors"
             title={showPin ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
           >
             {showPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -254,31 +264,36 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSelectMember }) => {
       </div>
 
       {/* 3. Group selection */}
-      <label className="text-[12px] uppercase tracking-[0.14em] text-[#b9bdc7] mb-2 block font-mono font-medium">
-        3. Bạn trực thuộc Tổ nào?
-      </label>
+      <div className="mb-4">
+        <label className="flex items-center gap-1.5 text-xs font-semibold text-[#f1ede3] uppercase tracking-wider mb-2">
+          <span className="w-5 h-5 bg-[#262f3d] text-[#e0bc4a] text-[11px] font-bold inline-flex items-center justify-center border border-[#3e4a5d]">
+            3
+          </span>
+          <span>Tổ của bạn</span>
+        </label>
 
-      <div className="grid grid-cols-4 gap-2 mb-4">
-        {GROUPS.map((g) => {
-          const isSelected = selectedGroup === g.id;
-          return (
-            <button
-              key={g.id}
-              type="button"
-              onClick={() => {
-                setSelectedGroup(g.id);
-                setErrorMessage('');
-              }}
-              className={`py-2.5 px-3 rounded-xl border text-sm font-medium transition-all flex flex-col items-center justify-center gap-0.5 ${
-                isSelected
-                  ? 'bg-gradient-to-b from-[#e0bc4a] to-[#c9a227] text-[#1a1206] border-[#e0bc4a] shadow-[0_4px_12px_rgba(201,162,39,0.35)] font-bold scale-[1.02]'
-                  : 'bg-[#12161d] text-[#f1ede3] border-[#333d4d] hover:border-[#c9a227] hover:bg-[#181d26]'
-              }`}
-            >
-              <span>{g.name}</span>
-            </button>
-          );
-        })}
+        <div className="grid grid-cols-4 gap-2">
+          {GROUPS.map((g) => {
+            const isSelected = selectedGroup === g.id;
+            return (
+              <button
+                key={g.id}
+                type="button"
+                onClick={() => {
+                  setSelectedGroup(g.id);
+                  setErrorMessage('');
+                }}
+                className={`py-2.5 px-3 border text-sm font-medium transition-all flex flex-col items-center justify-center gap-0.5 ${
+                  isSelected
+                    ? 'bg-gradient-to-b from-[#e0bc4a] to-[#c9a227] text-[#1a1206] border-[#e0bc4a] shadow-[0_4px_16px_rgba(201,162,39,0.4)] font-bold'
+                    : 'bg-[#12161d] text-[#f1ede3] border-[#333d4d] hover:border-[#c9a227] hover:bg-[#181d26]'
+                }`}
+              >
+                <span>{g.name}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {errorMessage && (
@@ -289,9 +304,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSelectMember }) => {
       )}
 
       {selectedMember && (
-        <div className="mt-2 p-3 rounded-xl bg-[#12161d]/80 border border-[#333d4d] flex items-center justify-between">
+        <div className="mt-2 p-3 bg-[#12161d]/80 border border-[#333d4d] flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-[#c9a227]/20 border border-[#c9a227] text-[#e0bc4a] flex items-center justify-center font-serif italic text-xs font-semibold">
+            <div className="w-7 h-7 bg-[#c9a227]/20 border border-[#c9a227] text-[#e0bc4a] flex items-center justify-center font-serif italic text-xs font-semibold">
               {toTitleCase(selectedMember).charAt(0)}
             </div>
             <div>
@@ -302,7 +317,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSelectMember }) => {
             </div>
           </div>
           {storageService.getUserVote(selectedMember) && (
-            <span className="text-xs text-[#6f9c86] bg-[#6f9c86]/15 px-2.5 py-1 rounded-full border border-[#6f9c86]/30 font-mono">
+            <span className="text-xs text-[#6f9c86] bg-[#6f9c86]/15 px-2.5 py-1 border border-[#6f9c86]/30 font-mono">
               Đã ghi nhận
             </span>
           )}
@@ -312,10 +327,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSelectMember }) => {
       <button
         type="button"
         onClick={handleEnter}
-        className="w-full mt-4 py-3.5 px-5 rounded-xl font-semibold text-[15px] bg-gradient-to-b from-[#e0bc4a] to-[#c9a227] text-[#1a1206] shadow-[0_4px_14px_rgba(201,162,39,0.35)] hover:shadow-[0_6px_22px_rgba(201,162,39,0.55)] active:scale-[0.99] transition-all flex items-center justify-center gap-2"
+        className="w-full mt-4 py-3.5 px-5 font-semibold text-[15px] bg-gradient-to-b from-[#e0bc4a] to-[#c9a227] text-[#1a1206] shadow-[0_6px_20px_rgba(201,162,39,0.35),0_2px_4px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_25px_rgba(201,162,39,0.55)] active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer border border-[#e0bc4a]"
       >
         <UserCheck className="w-4 h-4" />
-        Vào chấm điểm (Tổ {selectedGroup})
+        Vào chấm điểm
       </button>
     </div>
   );

@@ -1,13 +1,11 @@
 import { Exhibit, VoteRecord } from '../types';
-import { DEFAULT_EXHIBITS, RAW_MEMBERS, normalizeString, toTitleCase } from '../data/initialData';
+import { DEFAULT_EXHIBITS, DEFAULT_GAS_URL, RAW_MEMBERS, normalizeString, toTitleCase } from '../data/initialData';
 
 const VOTE_STORAGE_PREFIX = 'gallery_vote_v3:';
 const LEGACY_VOTE_PREFIX = 'gallery_vote_v2:';
 const EXHIBITS_STORAGE_KEY = 'gallery_exhibits_v2';
 const GAS_URL_STORAGE_KEY = 'gallery_gas_url';
 const LAST_SYNC_KEY = 'gallery_last_sync';
-
-const DEFAULT_GAS_URL = '';
 
 export const storageService = {
   // Google Apps Script Web App URL Config
@@ -22,7 +20,7 @@ export const storageService = {
     }
     // Check environment variable if available
     const envUrl = (import.meta as unknown as { env?: { VITE_GOOGLE_APPS_SCRIPT_URL?: string } })?.env?.VITE_GOOGLE_APPS_SCRIPT_URL;
-    return envUrl || DEFAULT_GAS_URL;
+    return (envUrl || DEFAULT_GAS_URL || '').trim();
   },
 
   setGasUrl(url: string): void {
@@ -178,6 +176,7 @@ export const storageService = {
     try {
       await fetch(url, {
         method: 'POST',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'text/plain;charset=utf-8',
         },
@@ -233,9 +232,10 @@ export const storageService = {
     if (!url) return false;
 
     try {
-      // Send as text/plain JSON payload to prevent CORS preflight blocking in Apps Script
+      // Send as text/plain JSON payload with no-cors mode to ensure Google Apps Script 302 redirect completes without CORS block
       await fetch(url, {
         method: 'POST',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'text/plain;charset=utf-8',
         },

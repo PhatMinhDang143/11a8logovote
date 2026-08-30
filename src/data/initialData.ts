@@ -2,6 +2,13 @@ import { Exhibit } from '../types';
 
 export const ADMIN_PASSWORD = 'bgk2026';
 
+/**
+ * Đường link Google Apps Script Web App mặc định (https://script.google.com/macros/s/.../exec)
+ * Khi điền vào đây, mọi thiết bị, trình duyệt (Chrome, Cốc Cốc, điện thoại 45 học sinh)
+ * đều sẽ tự động kết nối và đồng bộ chung 1 Google Sheet mà không cần cấu hình thủ công từng máy!
+ */
+export const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbyAA7Y1hLantgIWcUWMe7zNiDYVjhWkC8qDDAInrpvlLZPI9g0GqIMxgocbwmE9-GQ/exec';
+
 export const GROUPS = [
   { id: 1, name: 'Tổ 1', label: 'Tổ 1' },
   { id: 2, name: 'Tổ 2', label: 'Tổ 2' },
