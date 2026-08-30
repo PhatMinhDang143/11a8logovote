@@ -69,6 +69,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   // Editable exhibits state
   const [editableExhibits, setEditableExhibits] = useState<Exhibit[]>(exhibits);
   const [saveSuccessMessage, setSaveSuccessMessage] = useState('');
+  const [confirmClearScores, setConfirmClearScores] = useState(false);
+  const [confirmClearData, setConfirmClearData] = useState(false);
 
   // Synchronize gasUrlInput and exhibits when modal opens
   useEffect(() => {
@@ -93,7 +95,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       for (let s = 1; s <= 10; s++) scoreDist[s] = 0;
 
       allVotes.forEach((vote) => {
-        const score = vote.scores[exhibit.id];
+        if (!vote) return;
+        const score = vote.scores?.[exhibit.id];
         if (typeof score === 'number') {
           sum += score;
           count += 1;
@@ -423,17 +426,35 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                       Tổng số phiếu hiện tại: <strong className="text-[#e0bc4a]">{allVotes.length}</strong> / 45
                     </span>
                     {allVotes.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (window.confirm('Bạn có chắc muốn xóa tất cả điểm số đã chấm (đưa về 0 để chấm lại từ đầu)?')) {
-                            storageService.clearAllVotes();
-                          }
-                        }}
-                        className="py-1 px-2.5 rounded-lg text-xs font-mono bg-[#e2725b]/15 hover:bg-[#e2725b]/25 text-[#e2725b] border border-[#e2725b]/40 flex items-center gap-1.5 transition-colors cursor-pointer"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" /> Xóa tất cả điểm về 0
-                      </button>
+                      confirmClearScores ? (
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              storageService.clearAllVotes();
+                              setConfirmClearScores(false);
+                            }}
+                            className="py-1 px-2.5 rounded-lg text-xs font-mono bg-[#e2725b] hover:bg-[#d05f48] text-white flex items-center gap-1 transition-colors cursor-pointer"
+                          >
+                            <Check className="w-3.5 h-3.5" /> Chắc chắn xóa
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setConfirmClearScores(false)}
+                            className="py-1 px-2 rounded-lg text-xs font-mono bg-[#262f3d] text-[#b9bdc7] hover:text-white"
+                          >
+                            Hủy
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setConfirmClearScores(true)}
+                          className="py-1 px-2.5 rounded-lg text-xs font-mono bg-[#e2725b]/15 hover:bg-[#e2725b]/25 text-[#e2725b] border border-[#e2725b]/40 flex items-center gap-1.5 transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" /> Xóa tất cả điểm về 0
+                        </button>
+                      )
                     )}
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -951,18 +972,36 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                         <Sparkles className="w-3.5 h-3.5" /> +16 phiếu mẫu theo Tổ
                       </button>
 
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (window.confirm('Bạn có chắc chắn muốn xóa toàn bộ kết quả chấm điểm hiện tại?')) {
-                            storageService.clearAllVotes();
-                            setActiveTab('scores');
-                          }
-                        }}
-                        className="py-2 px-3 rounded-lg text-xs font-mono bg-[#e2725b]/10 hover:bg-[#e2725b]/20 text-[#e2725b] border border-[#e2725b]/30 flex items-center gap-1.5"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" /> Xóa tất cả điểm
-                      </button>
+                      {confirmClearData ? (
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              storageService.clearAllVotes();
+                              setConfirmClearData(false);
+                              setActiveTab('scores');
+                            }}
+                            className="py-2 px-3 rounded-lg text-xs font-mono bg-[#e2725b] hover:bg-[#d05f48] text-white flex items-center gap-1 transition-colors cursor-pointer"
+                          >
+                            <Check className="w-3.5 h-3.5" /> Chắc chắn xóa
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setConfirmClearData(false)}
+                            className="py-2 px-2 rounded-lg text-xs font-mono bg-[#262f3d] text-[#b9bdc7] hover:text-white"
+                          >
+                            Hủy
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setConfirmClearData(true)}
+                          className="py-2 px-3 rounded-lg text-xs font-mono bg-[#e2725b]/10 hover:bg-[#e2725b]/20 text-[#e2725b] border border-[#e2725b]/30 flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" /> Xóa tất cả điểm
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

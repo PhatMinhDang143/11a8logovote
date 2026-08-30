@@ -151,11 +151,9 @@ export default function App() {
       <div className="w-full max-w-xl flex flex-col items-center my-auto">
         <Header />
 
-        {screen === 'login' && (
+        {screen === 'login' || !currentUser ? (
           <LoginScreen onSelectMember={handleSelectMember} />
-        )}
-
-        {screen === 'vote' && currentUser && (
+        ) : screen === 'vote' ? (
           <VotingScreen
             exhibits={exhibits}
             votableExhibits={votableExhibits}
@@ -170,9 +168,7 @@ export default function App() {
             onOpenLightbox={(ex) => setLightboxExhibit(ex)}
             isSubmitting={isSubmitting}
           />
-        )}
-
-        {screen === 'done' && currentUser && (
+        ) : (
           <DoneScreen
             currentUser={currentUser}
             userGroup={userGroup}

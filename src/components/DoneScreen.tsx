@@ -58,7 +58,7 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
       let count = 0;
 
       allVotes.forEach((vote) => {
-        const score = vote.scores[exhibit.id];
+        const score = vote.scores?.[exhibit.id];
         if (typeof score === 'number') {
           sum += score;
           count += 1;
@@ -144,7 +144,7 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
           <div className="mt-3 p-3 bg-[#12161d] border border-[#333d4d] inline-flex flex-wrap items-center justify-center gap-2 text-xs font-mono shadow-inner">
             <span className="text-[#b9bdc7]">Điểm bạn đã chấm:</span>
             {exhibits.map((ex) => {
-              const score = myVote.scores[ex.id];
+              const score = myVote.scores?.[ex.id];
               if (ex.groupNumber === userGroup) {
                 return (
                   <span
