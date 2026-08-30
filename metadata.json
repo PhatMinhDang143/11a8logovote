@@ -1,0 +1,7 @@
+{
+  "name": "Phòng Trưng Bày — Bình Chọn Tác Phẩm",
+  "description": "Ứng dụng triển lãm, bình chọn và chấm điểm tác phẩm 4 Tổ dành cho 45 thành viên, hỗ trợ đồng bộ dữ liệu thời gian thực qua Google Sheets và Google Apps Script.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
