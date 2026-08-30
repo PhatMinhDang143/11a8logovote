@@ -13,10 +13,12 @@
 export const GOOGLE_APPS_SCRIPT_TEMPLATE = `/**
  * ===============================================================
  * HỆ THỐNG CHẤM ĐIỂM TRIỂN LÃM NGHỆ THUẬT (4 TỔ) - GOOGLE APPS SCRIPT
+ * TỰ ĐỘNG ĐỒNG BỘ: KẾT QUẢ CHẤM ĐIỂM & ẢNH TÁC PHẨM CÁC TỔ
  * ===============================================================
  */
 
 var SHEET_NAME = "KetQuaChamDiem";
+var EXHIBITS_SHEET_NAME = "DanhSachTacPham";
 
 function getOrCreateSheet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -50,7 +52,25 @@ function getOrCreateSheet() {
   return sheet;
 }
 
-// Xử lý lấy toàn bộ dữ liệu chấm điểm (GET)
+function getOrCreateExhibitsSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(EXHIBITS_SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(EXHIBITS_SHEET_NAME);
+    var headers = ["ID", "Tổ", "Tiêu đề tác phẩm", "Link ảnh (Google Drive / URL)"];
+    sheet.appendRow(headers);
+    var headerRange = sheet.getRange(1, 1, 1, headers.length);
+    headerRange.setBackground("#1e2531").setFontColor("#f1ede3").setFontWeight("bold").setHorizontalAlignment("center");
+    sheet.setFrozenRows(1);
+    sheet.setColumnWidth(1, 60);
+    sheet.setColumnWidth(2, 80);
+    sheet.setColumnWidth(3, 200);
+    sheet.setColumnWidth(4, 450);
+  }
+  return sheet;
+}
+
+// Xử lý lấy toàn bộ dữ liệu chấm điểm & tác phẩm (GET)
 function doGet(e) {
   try {
     var sheet = getOrCreateSheet();
@@ -79,11 +99,28 @@ function doGet(e) {
         timestamp: timestamp
       });
     }
+
+    // Đọc danh sách ảnh tác phẩm nếu có
+    var exhibitsSheet = getOrCreateExhibitsSheet();
+    var exData = exhibitsSheet.getDataRange().getValues();
+    var exhibits = [];
+    for (var j = 1; j < exData.length; j++) {
+      var exRow = exData[j];
+      if (exRow[0]) {
+        exhibits.push({
+          id: parseInt(exRow[0]) || j,
+          groupNumber: parseInt(exRow[1]) || j,
+          title: String(exRow[2] || "Tác phẩm Tổ " + (exRow[1] || j)),
+          url: String(exRow[3] || "")
+        });
+      }
+    }
     
     var output = JSON.stringify({
       success: true,
       count: votes.length,
       votes: votes,
+      exhibits: exhibits.length > 0 ? exhibits : null,
       lastSync: new Date().toISOString()
     });
     
@@ -97,10 +134,9 @@ function doGet(e) {
   }
 }
 
-// Xử lý gửi phiếu chấm điểm (POST)
+// Xử lý gửi phiếu chấm điểm HOẶC cập nhật ảnh tác phẩm (POST)
 function doPost(e) {
   try {
-    var sheet = getOrCreateSheet();
     var payload = {};
     
     if (e && e.postData && e.postData.contents) {
@@ -108,7 +144,29 @@ function doPost(e) {
     } else if (e && e.parameter) {
       payload = e.parameter;
     }
+
+    // Trường hợp 1: Ban tổ chức lưu danh sách ảnh tác phẩm
+    if (payload.action === "saveExhibits" && Array.isArray(payload.exhibits)) {
+      var exSheet = getOrCreateExhibitsSheet();
+      exSheet.clearContents();
+      var exHeaders = ["ID", "Tổ", "Tiêu đề tác phẩm", "Link ảnh (Google Drive / URL)"];
+      exSheet.appendRow(exHeaders);
+      var headerRange = exSheet.getRange(1, 1, 1, exHeaders.length);
+      headerRange.setBackground("#1e2531").setFontColor("#f1ede3").setFontWeight("bold").setHorizontalAlignment("center");
+      
+      for (var k = 0; k < payload.exhibits.length; k++) {
+        var ex = payload.exhibits[k];
+        exSheet.appendRow([ex.id, ex.groupNumber, ex.title, ex.url]);
+      }
+
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        message: "Đã lưu và đồng bộ toàn bộ ảnh tác phẩm lên Google Sheets thành công!"
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
     
+    // Trường hợp 2: Học sinh gửi phiếu chấm điểm
+    var sheet = getOrCreateSheet();
     var memberRaw = payload.memberRaw || "";
     var displayName = payload.displayName || "";
     var groupNumber = parseInt(payload.groupNumber) || 1;

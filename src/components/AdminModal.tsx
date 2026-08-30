@@ -191,12 +191,39 @@ export const AdminModal: React.FC<AdminModalProps> = ({
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      const result = event.target?.result as string;
-      if (result) {
-        const updated = [...editableExhibits];
-        updated[idx] = { ...updated[idx], url: result };
-        setEditableExhibits(updated);
-      }
+      const rawDataUrl = event.target?.result as string;
+      if (!rawDataUrl) return;
+
+      // Compress and resize image so it can sync safely across Google Sheets and devices
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxDimension = 1280;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxDimension || height > maxDimension) {
+          if (width > height) {
+            height = Math.round((height * maxDimension) / width);
+            width = maxDimension;
+          } else {
+            width = Math.round((width * maxDimension) / height);
+            height = maxDimension;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          const updated = [...editableExhibits];
+          updated[idx] = { ...updated[idx], url: compressedDataUrl };
+          setEditableExhibits(updated);
+        }
+      };
+      img.src = rawDataUrl;
     };
     reader.readAsDataURL(file);
   };
@@ -811,6 +838,8 @@ export const AdminModal: React.FC<AdminModalProps> = ({
                                 <img
                                   src={previewUrl}
                                   alt={`Tổ ${ex.groupNumber}`}
+                                  referrerPolicy="no-referrer"
+                                  crossOrigin="anonymous"
                                   className="w-full h-full object-cover"
                                 />
                               ) : (

@@ -53,6 +53,8 @@ export const ImageLightbox: React.FC<ImageLightboxProps> = ({ exhibit, onClose }
           <img
             src={displayImageUrl}
             alt={`Tác phẩm Tổ ${exhibit.groupNumber}`}
+            referrerPolicy="no-referrer"
+            crossOrigin="anonymous"
             className="max-h-[70vh] w-auto max-w-full object-contain rounded-lg shadow-inner"
           />
         </div>

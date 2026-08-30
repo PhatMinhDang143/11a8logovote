@@ -24,15 +24,18 @@ export const formatImageUrl = (url: string): string => {
   // Google Drive format 1: /file/d/FILE_ID/...
   // Google Drive format 2: id=FILE_ID
   // Google Drive format 3: /d/FILE_ID
+  // Google Drive format 4: drive.google.com/open?id=FILE_ID
+  // Google Drive format 5: drive.google.com/uc?id=FILE_ID
   const driveMatch =
     trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
     trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/) ||
-    trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/) ||
+    trimmed.match(/drive\.google\.com\/.*[?&]id=([a-zA-Z0-9_-]+)/);
 
   if (driveMatch && driveMatch[1]) {
     const fileId = driveMatch[1];
-    // Google Drive direct thumbnail/preview CDN link
-    return `https://lh3.googleusercontent.com/d/${fileId}`;
+    // Google Drive direct image CDN link (w1600 provides crisp high-resolution without login required)
+    return `https://lh3.googleusercontent.com/d/${fileId}=w1600`;
   }
 
   return trimmed;

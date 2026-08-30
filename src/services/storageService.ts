@@ -126,6 +126,11 @@ export const storageService = {
           }
         });
 
+        // If exhibits returned from Google Sheet, sync them too
+        if (Array.isArray(data.exhibits) && data.exhibits.length > 0) {
+          localStorage.setItem(EXHIBITS_STORAGE_KEY, JSON.stringify(data.exhibits));
+        }
+
         localStorage.setItem(LAST_SYNC_KEY, new Date().toISOString());
         window.dispatchEvent(new Event('gallery-vote-updated'));
         return { success: true, count: data.votes.length };
@@ -155,8 +160,36 @@ export const storageService = {
   saveExhibits(exhibits: Exhibit[]): void {
     try {
       localStorage.setItem(EXHIBITS_STORAGE_KEY, JSON.stringify(exhibits));
+      window.dispatchEvent(new Event('gallery-vote-updated'));
+
+      // Push to Google Sheets if configured so all devices & students get the updated photos
+      const gasUrl = this.getGasUrl();
+      if (gasUrl) {
+        this.pushExhibitsToGoogleSheets(exhibits, gasUrl);
+      }
     } catch (e) {
       console.error('Failed to save exhibits', e);
+    }
+  },
+
+  async pushExhibitsToGoogleSheets(exhibits: Exhibit[], gasUrl?: string): Promise<boolean> {
+    const url = gasUrl || this.getGasUrl();
+    if (!url) return false;
+    try {
+      await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify({
+          action: 'saveExhibits',
+          exhibits: exhibits,
+        }),
+      });
+      return true;
+    } catch (e) {
+      console.warn('Could not push exhibits to Google Sheet', e);
+      return false;
     }
   },
 
