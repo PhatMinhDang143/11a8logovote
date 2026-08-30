@@ -4,8 +4,9 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
+  const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
   return {
-    base: './',
+    base: isGitHubActions ? '/11a8logovote/' : './',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
