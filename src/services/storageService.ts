@@ -88,7 +88,7 @@ export const storageService = {
     }
   },
 
-  // Fetch all votes from Google Sheet and merge into local state
+  // Fetch all votes from Google Sheet and mirror into local state
   async syncWithGoogleSheets(): Promise<{ success: boolean; count: number; error?: string }> {
     const url = this.getGasUrl();
     if (!url) {
@@ -109,7 +109,29 @@ export const storageService = {
 
       const data = await response.json();
       if (data && data.success !== false && Array.isArray(data.votes)) {
-        // Save into local storage cache
+        // 1. Build a set of all normalized student names currently existing in Google Sheets
+        const remoteNormalizedNames = new Set(
+          data.votes
+            .filter((v: VoteRecord) => v && v.memberRaw)
+            .map((v: VoteRecord) => normalizeString(v.memberRaw))
+        );
+
+        // 2. Remove any local vote keys that NO LONGER exist in Google Sheets (e.g. user deleted row on Sheet)
+        const keysToRemove: string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && (key.startsWith(VOTE_STORAGE_PREFIX) || key.startsWith(LEGACY_VOTE_PREFIX))) {
+            const memberKey = key
+              .replace(VOTE_STORAGE_PREFIX, '')
+              .replace(LEGACY_VOTE_PREFIX, '');
+            if (!remoteNormalizedNames.has(memberKey)) {
+              keysToRemove.push(key);
+            }
+          }
+        }
+        keysToRemove.forEach((k) => localStorage.removeItem(k));
+
+        // 3. Save/Update current valid votes from Google Sheet into local storage cache
         data.votes.forEach((v: VoteRecord) => {
           if (v && v.memberRaw) {
             const key = VOTE_STORAGE_PREFIX + normalizeString(v.memberRaw);
@@ -124,7 +146,7 @@ export const storageService = {
           }
         });
 
-        // If exhibits returned from Google Sheet, sync them too
+        // 4. If exhibits returned from Google Sheet, sync them too
         if (Array.isArray(data.exhibits) && data.exhibits.length > 0) {
           localStorage.setItem(EXHIBITS_STORAGE_KEY, JSON.stringify(data.exhibits));
         }
@@ -199,6 +221,16 @@ export const storageService = {
       const raw = localStorage.getItem(VOTE_STORAGE_PREFIX + norm);
       if (raw) {
         return JSON.parse(raw);
+      }
+      // Also check legacy prefix if exists
+      const rawLegacy = localStorage.getItem(LEGACY_VOTE_PREFIX + norm);
+      if (rawLegacy) {
+        return JSON.parse(rawLegacy);
+      }
+      // Check for legacy typo variant if "TRẦN ĐỨC NHÂN"
+      if (norm === 'TRẦN ĐỨC NHÂN') {
+        const rawTtran = localStorage.getItem(VOTE_STORAGE_PREFIX + 'TTRẦN ĐỨC NHÂN');
+        if (rawTtran) return JSON.parse(rawTtran);
       }
     } catch (e) {
       console.error('Failed to get user vote', e);

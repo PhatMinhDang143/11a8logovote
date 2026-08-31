@@ -118,7 +118,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onSelectMember }) => {
     }
 
     const existingVote = storageService.getUserVote(matched);
-    const finalGroup = existingVote?.groupNumber || selectedGroup;
+    const finalGroup = selectedGroup;
     onSelectMember(matched, finalGroup, !!existingVote);
   };
 
