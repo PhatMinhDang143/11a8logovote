@@ -7,6 +7,7 @@ import {
   LogOut,
   Trophy,
   RefreshCw,
+  Radio,
 } from 'lucide-react';
 import { Exhibit } from '../types';
 import { RAW_MEMBERS, toTitleCase, normalizeString, formatImageUrl } from '../data/initialData';
@@ -18,6 +19,7 @@ interface DoneScreenProps {
   alreadyVoted: boolean;
   exhibits: Exhibit[];
   onResetUser: () => void;
+  onOpenLive?: () => void;
 }
 
 export const DoneScreen: React.FC<DoneScreenProps> = ({
@@ -26,8 +28,10 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
   alreadyVoted,
   exhibits,
   onResetUser,
+  onOpenLive,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
+
   const [voteVersion, setVoteVersion] = useState(0);
   const [isManualSyncing, setIsManualSyncing] = useState(false);
 
@@ -343,11 +347,21 @@ export const DoneScreen: React.FC<DoneScreenProps> = ({
       </div>
 
       {/* 5. FOOTER ACTIONS */}
-      <div className="pt-2 border-t border-[#333d4d] flex items-center justify-between gap-3">
+      <div className="pt-2 border-t border-[#333d4d] flex flex-col sm:flex-row items-center justify-between gap-2.5">
+        {onOpenLive && (
+          <button
+            type="button"
+            onClick={onOpenLive}
+            className="w-full sm:flex-1 py-2.5 px-4 bg-[#c9a227]/20 hover:bg-[#c9a227]/30 text-[#e0bc4a] border border-[#c9a227]/60 text-xs font-mono transition-colors flex items-center justify-center gap-1.5 font-semibold shadow-[0_2px_10px_rgba(201,162,39,0.2)] cursor-pointer"
+          >
+            <Radio className="w-3.5 h-3.5" />
+            Mở Bảng Trực Tiếp (Live)
+          </button>
+        )}
         <button
           type="button"
           onClick={onResetUser}
-          className="flex-1 py-2.5 px-4 border border-[#333d4d] hover:border-[#c9a227] text-xs text-[#b9bdc7] hover:text-[#f1ede3] bg-[#181d26] transition-colors flex items-center justify-center gap-1.5 font-medium shadow-sm hover:shadow-md cursor-pointer"
+          className="w-full sm:flex-1 py-2.5 px-4 border border-[#333d4d] hover:border-[#c9a227] text-xs text-[#b9bdc7] hover:text-[#f1ede3] bg-[#181d26] transition-colors flex items-center justify-center gap-1.5 font-medium shadow-sm hover:shadow-md cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5" />
           Đăng xuất / Đổi thành viên

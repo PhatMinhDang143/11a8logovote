@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Settings } from 'lucide-react';
 import { Header } from './components/Header';
 import { LoginScreen } from './components/LoginScreen';
 import { VotingScreen } from './components/VotingScreen';
 import { DoneScreen } from './components/DoneScreen';
+import { LiveBoard } from './components/LiveBoard';
 import { AdminModal } from './components/AdminModal';
 import { ImageLightbox } from './components/ImageLightbox';
 import { Exhibit, ScreenState, VoteRecord } from './types';
@@ -16,6 +17,48 @@ export default function App() {
   const [userGroup, setUserGroup] = useState<number>(1);
   const [alreadyVoted, setAlreadyVoted] = useState<boolean>(false);
   const [exhibits, setExhibits] = useState<Exhibit[]>(() => storageService.getExhibits());
+
+  // URL route check for Live Scoreboard view (?view=live or #live)
+  const isLiveUrl = () => {
+    if (typeof window === 'undefined') return false;
+    const params = new URLSearchParams(window.location.search);
+    return params.get('view') === 'live' || params.has('live') || window.location.hash === '#live';
+  };
+
+  const [isLiveView, setIsLiveView] = useState<boolean>(() => isLiveUrl());
+
+  // Handle URL change / popstate
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setIsLiveView(isLiveUrl());
+    };
+
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+    };
+  }, []);
+
+  const openLiveView = useCallback(() => {
+    setIsLiveView(true);
+    const url = new URL(window.location.href);
+    url.searchParams.set('view', 'live');
+    window.history.pushState({}, '', url.toString());
+  }, []);
+
+  const closeLiveView = useCallback(() => {
+    setIsLiveView(false);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('view');
+    url.searchParams.delete('live');
+    if (window.location.hash === '#live') {
+      history.pushState('', document.title, window.location.pathname + window.location.search);
+    } else {
+      window.history.pushState({}, '', url.toString());
+    }
+  }, []);
 
   // Voting flow state: maps exhibitId -> score (1..10 or null)
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
@@ -147,43 +190,53 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-between p-4 sm:p-8 pb-16 selection:bg-[#c9a227] selection:text-[#1a1206]">
-      {/* Center Container */}
-      <div className="w-full max-w-xl flex flex-col items-center my-auto">
-        <Header />
+      {isLiveView ? (
+        /* LIVE BROADCAST SCOREBOARD VIEW */
+        <LiveBoard
+          exhibits={exhibits}
+          onBackToVoting={closeLiveView}
+          onOpenLightbox={(ex) => setLightboxExhibit(ex)}
+        />
+      ) : (
+        /* VOTING & ENTRY FLOW VIEW */
+        <div className="w-full max-w-xl flex flex-col items-center my-auto">
+          <Header onOpenLive={openLiveView} />
 
-        {screen === 'login' || !currentUser ? (
-          <LoginScreen onSelectMember={handleSelectMember} />
-        ) : screen === 'vote' ? (
-          <VotingScreen
-            exhibits={exhibits}
-            votableExhibits={votableExhibits}
-            currentStepIndex={currentStepIndex}
-            scores={scores}
-            currentUser={currentUser}
-            userGroup={userGroup}
-            onSelectScore={handleSelectScore}
-            onPrev={handlePrevExhibit}
-            onNext={handleNextExhibit}
-            onSubmit={handleSubmitVote}
-            onOpenLightbox={(ex) => setLightboxExhibit(ex)}
-            isSubmitting={isSubmitting}
-          />
-        ) : (
-          <DoneScreen
-            currentUser={currentUser}
-            userGroup={userGroup}
-            alreadyVoted={alreadyVoted}
-            exhibits={exhibits}
-            onResetUser={handleResetUser}
-          />
-        )}
-      </div>
+          {screen === 'login' || !currentUser ? (
+            <LoginScreen onSelectMember={handleSelectMember} />
+          ) : screen === 'vote' ? (
+            <VotingScreen
+              exhibits={exhibits}
+              votableExhibits={votableExhibits}
+              currentStepIndex={currentStepIndex}
+              scores={scores}
+              currentUser={currentUser}
+              userGroup={userGroup}
+              onSelectScore={handleSelectScore}
+              onPrev={handlePrevExhibit}
+              onNext={handleNextExhibit}
+              onSubmit={handleSubmitVote}
+              onOpenLightbox={(ex) => setLightboxExhibit(ex)}
+              isSubmitting={isSubmitting}
+            />
+          ) : (
+            <DoneScreen
+              currentUser={currentUser}
+              userGroup={userGroup}
+              alreadyVoted={alreadyVoted}
+              exhibits={exhibits}
+              onResetUser={handleResetUser}
+              onOpenLive={openLiveView}
+            />
+          )}
+        </div>
+      )}
 
       {/* Admin Floating Action Button */}
       <button
         type="button"
         onClick={() => setIsAdminOpen(true)}
-        className="fixed bottom-5 right-5 w-10 h-10 rounded-full bg-[#1e2531] border border-[#333d4d] hover:border-[#c9a227] text-[#b9bdc7] hover:text-[#e0bc4a] shadow-lg flex items-center justify-center transition-all opacity-70 hover:opacity-100 hover:scale-105 z-30"
+        className="fixed bottom-5 right-5 w-10 h-10 rounded-full bg-[#1e2531] border border-[#333d4d] hover:border-[#c9a227] text-[#b9bdc7] hover:text-[#e0bc4a] shadow-lg flex items-center justify-center transition-all opacity-70 hover:opacity-100 hover:scale-105 z-30 cursor-pointer"
         title="Quản trị viên / Ban tổ chức"
       >
         <Settings className="w-4 h-4" />
@@ -205,3 +258,4 @@ export default function App() {
     </div>
   );
 }
+

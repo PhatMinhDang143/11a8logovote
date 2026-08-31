@@ -22,6 +22,7 @@ import {
   HelpCircle,
   KeyRound,
   Upload,
+  Radio,
 } from 'lucide-react';
 import { Exhibit, VoteRecord } from '../types';
 import {
@@ -420,6 +421,53 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               {/* TAB 1: RANKINGS & SCORES */}
               {activeTab === 'scores' && (
                 <div className="space-y-4">
+                  {/* Live Board Banner */}
+                  <div className="bg-[#12161d] border border-[#c9a227]/40 p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-inner">
+                    <div className="flex items-center gap-2.5">
+                      <span className="relative flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#e2725b] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#e2725b]"></span>
+                      </span>
+                      <div>
+                        <div className="text-xs font-mono font-bold text-[#e0bc4a] flex items-center gap-1.5">
+                          <Radio className="w-3.5 h-3.5" /> BẢNG TRỰC TIẾP PHÁT ĐIỂM (LIVE)
+                        </div>
+                        <div className="text-[11px] text-[#8c94a4] font-mono">
+                          Trình chiếu kết quả thời gian thực kèm đếm ngược 18:00
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const url = new URL(window.location.href);
+                          url.searchParams.set('view', 'live');
+                          window.open(url.toString(), '_blank');
+                        }}
+                        className="flex-1 sm:flex-none py-1.5 px-3 bg-[#c9a227] hover:bg-[#e0bc4a] text-[#1a1206] font-bold text-xs font-mono flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        <Radio className="w-3.5 h-3.5" />
+                        Mở Tab Trực Tiếp
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const url = new URL(window.location.href);
+                          url.searchParams.set('view', 'live');
+                          navigator.clipboard.writeText(url.toString());
+                          alert('Đã sao chép link Bảng Trực Tiếp: ' + url.toString());
+                        }}
+                        className="py-1.5 px-2.5 bg-[#262f3d] hover:bg-[#333d4d] text-[#e0bc4a] border border-[#333d4d] text-xs font-mono flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                        title="Sao chép link gửi cho lớp"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                        Copy Link
+                      </button>
+                    </div>
+                  </div>
+
                   {/* Action row */}
                   <div className="flex items-center justify-between gap-2 bg-[#12161d] p-3 rounded-xl border border-[#333d4d]">
                     <span className="text-xs text-[#b9bdc7] font-mono">
